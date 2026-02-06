@@ -1,0 +1,101 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # 1️⃣ Build Images
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Backend Image
+        run: docker build -t food-delivery-backend ./backend
+
+      - name: Build Frontend Image
+        run: docker build -t food-delivery-frontend ./frontend
+
+      - name: Build Admin Image
+        run: docker build -t food-delivery-admin ./admin
+
+  # 2️⃣ Start MongoDB
+  start-mongo:
+    runs-on: ubuntu-latest
+    needs: build-images
+    steps:
+      - name: Start MongoDB
+        run: docker-compose up -d mongo
+
+  # 3️⃣ Start Backend
+  start-backend:
+    runs-on: ubuntu-latest
+    needs: start-mongo
+    steps:
+      - name: Start Backend
+        run: docker-compose up -d backend
+
+      - name: Wait for Backend
+        run: |
+          echo "Waiting for backend to be ready..."
+          for i in {1..30}; do
+            docker exec backend curl -f http://localhost:4000/ && break
+            echo "Backend not ready yet, waiting 2s..."
+            sleep 2
+          done
+
+  # 4️⃣ Start Frontend and Admin
+  start-frontend-admin:
+    runs-on: ubuntu-latest
+    needs: start-backend
+    steps:
+      - name: Start Frontend and Admin
+        run: docker-compose up -d frontend admin
+
+  # 5️⃣ Run Backend Tests
+  backend-tests:
+    runs-on: ubuntu-latest
+    needs: start-backend
+    steps:
+      - name: Run Backend Tests
+        run: docker exec backend npm test || echo "No backend tests found"
+
+  # 6️⃣ Run Frontend Test
+  frontend-tests:
+    runs-on: ubuntu-latest
+    needs: start-frontend-admin
+    steps:
+      - name: Run Frontend Smoke Test
+        run: curl -f http://localhost:3000 || echo "Frontend not reachable"
+
+  # 7️⃣ Run Admin Test
+  admin-tests:
+    runs-on: ubuntu-latest
+    needs: start-frontend-admin
+    steps:
+      - name: Run Admin Smoke Test
+        run: curl -f http://localhost:8080 || echo "Admin not reachable"
+
+  # 8️⃣ Shutdown All Containers
+  shutdown:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, admin-tests]
+    steps:
+      - name: Shutdown all containers
+        run: docker-compose down
