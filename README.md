@@ -1,130 +1,68 @@
-# TOMATO - Food Ordering Website
+FOOD-DELIVERY 🍔🚀
 
-This repository hosts the source code for TOMATO, a dynamic food ordering website built with the MERN Stack. It offers a user-friendly platform for seamless online food ordering.
+FOOD-DELIVERY is a modern full-stack food delivery application. It consists of three main components: the Backend built with Node.js and Express, the Frontend built with React, and the Admin Panel also built with React. The project is fully containerized using Docker and Docker Compose, and it includes a GitHub Actions workflow to automate building, testing, and verification of all services. 🐳⚙️
 
-## Demo
+Project Structure 📂
 
-- User Panel: [https://food-delivery-frontend-s2l9.onrender.com/](https://food-delivery-frontend-s2l9.onrender.com/)
-- Admin Panel: [https://food-delivery-admin-wrme.onrender.com/](https://food-delivery-admin-wrme.onrender.com/)
+The project is organized into separate folders for each service:
 
-## Features
+.github/workflows/main.yml – GitHub Actions workflow
 
-- User Panel
-- Admin Panel
-- JWT Authentication
-- Password Hashing with Bcrypt
-- Stripe Payment Integration
-- Login/Signup
-- Logout
-- Add to Cart
-- Place Order
-- Order Management
-- Products Management
-- Filter Food Products
-- Login/Signup
-- Authenticated APIs
-- REST APIs
-- Role-Based Identification
-- Beautiful Alerts
+backend/ – Backend server with Node.js + Express
 
-## Screenshots
+frontend/ – Frontend application built with React
 
-![Hero](https://i.ibb.co/59cwY75/food-hero.png)
-- Hero Section
+admin/ – Admin panel built with React
 
-![Products](https://i.ibb.co/JnNQPyQ/food-products.png)
-- Products Section
+docker-compose.yml – Runs all services together
 
-![Cart](https://i.ibb.co/t2LrQ8p/food-cart.png)
-- Cart Page
+Setting Up and Running the Project 🛠️
 
-![Login](https://i.ibb.co/s6PgwkZ/food-login.png)
-- Login Popup
+To start the project, you first need to build Docker images for each component. For the backend, frontend, and admin panel, you build the images so each service runs in its own container. After building, you can start all services together using Docker Compose, which ensures a consistent environment and allows all components to communicate with each other properly.
 
-## Run Locally
+To build the Docker images, you would run Docker build commands for the backend, frontend, and admin panel.
 
-Clone the project
+To start all services, you run Docker Compose, which launches the backend at http://localhost:5000, the frontend at http://localhost:3000, and the admin panel at http://localhost:8080.
 
-```bash
-    git clone https://github.com/Mshandev/Food-Delivery
-```
-Go to the project directory
+After testing, you can stop all services by stopping Docker Compose. ✅
 
-```bash
-    cd Food-Delivery
-```
-Install dependencies (frontend)
+Using Docker Hub Images 🌐
 
-```bash
-    cd frontend
-    npm install
-```
-Install dependencies (admin)
+After successfully building and testing locally, the Docker images can be pushed to Docker Hub under the username kerolos024. Once uploaded, Docker Compose can pull these images directly from Docker Hub without requiring a local build, making it easy for anyone to run the application anywhere.
 
-```bash
-    cd admin
-    npm install
-```
-Install dependencies (backend)
+Backend image: kerolos024/food-delivery-backend
+ 🐍
 
-```bash
-    cd backend
-    npm install
-```
-Setup Environment Vaiables
+Frontend image: kerolos024/food-delivery-frontend
+ ⚛️
 
-```Make .env file in "backend" folder and store environment Variables
-  JWT_SECRET=YOUR_SECRET_TEXT
-  SALT=YOUR_SALT_VALUE
-  MONGO_URL=YOUR_DATABASE_URL
-  STRIPE_SECRET_KEY=YOUR_KEY
- ```
+Admin image: kerolos024/food-delivery-admin
+ 🖥️
 
-Setup the Frontend and Backend URL
-   - App.jsx in Admin folder
-      const url = YOUR_BACKEND_URL
-     
-  - StoreContext.js in Frontend folder
-      const url = YOUR_BACKEND_URL
+To test the application using Docker Hub images, you pull the images from Docker Hub and then run Docker Compose, ensuring that the environment is identical across all systems.
 
-  - orderController in Backend folder
-      const frontend_url = YOUR_FRONTEND_URL 
+GitHub Actions Workflow ⚙️
 
-Start the Backend server
+The project includes a GitHub Actions workflow located in .github/workflows/main.yml. This workflow automates:
 
-```bash
-    nodemon server.js
-```
+Building Docker images for backend, frontend, and admin panel
 
-Start the Frontend server
+Running Docker Compose to launch all services
 
-```bash
-    npm start
-```
+Verifying that the backend service responds correctly
 
-Start the Backend server
+This ensures that any updates to the project are tested automatically, reducing the chance of errors reaching production.
 
-```bash
-    npm start
-```
-## Tech Stack
-* [React](https://reactjs.org/)
-* [Node.js](https://nodejs.org/en)
-* [Express.js](https://expressjs.com/)
-* [Mongodb](https://www.mongodb.com/)
-* [Stripe](https://stripe.com/)
-* [JWT-Authentication](https://jwt.io/introduction)
-* [Multer](https://www.npmjs.com/package/multer)
+Notes and Recommendations 📌
 
-## Deployment
+The project runs entirely using Docker Compose, so no local Node.js installation is required.
 
-The application is deployed on Render.
+Environment variables can be customized using .env files.
 
-## Contributing
+It is recommended to test all services locally first before pushing images to Docker Hub to ensure everything works as expected.
 
-Contributions are always welcome!
-Just raise an issue, and we will discuss it.
+You can add additional services or extend the workflow to automatically push Docker images after successful testing.
 
-## Feedback
+Summary 🎯
 
-If you have any feedback, please reach out to me [here](https://www.linkedin.com/in/muhammad-shan-full-stack-developer/)
+FOOD-DELIVERY is a professional full-stack Dockerized project with automated CI/CD workflow using GitHub Actions. It is easy to set up, easy to run, and ready for both development and production environments. Feedback, contributions, and improvements are highly welcome

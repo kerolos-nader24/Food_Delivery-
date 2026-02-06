@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  backend:
+    build: ./backend
+    image: kerolos024/backend:latest
+    container_name: backend
+    ports:
+      - "5000:4000"  # خارجي:داخلي
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      MONGO_URL: "mongodb://mongo:27017/mydb"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  frontend:
+    build: ./frontend
+    image: kerolos024/frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  admin:
+    build: ./admin
+    image: kerolos024/admin:latest
+    container_name: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodata:
