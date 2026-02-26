@@ -1,4 +1,4 @@
-FOOD-DELIVERY 🍔🚀
+Dockerized Full-Stack CI/CD Pipeline 🍔🚀
 
 FOOD-DELIVERY is a modern full-stack food delivery application. It consists of three main components: the Backend built with Node.js and Express, the Frontend built with React, and the Admin Panel also built with React. The project is fully containerized using Docker and Docker Compose, and it includes a GitHub Actions workflow to automate building, testing, and verification of all services. 🐳⚙️
 
